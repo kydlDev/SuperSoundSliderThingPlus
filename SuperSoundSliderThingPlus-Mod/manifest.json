@@ -1,11 +1,11 @@
 {
   "name": "SuperSoundSliderThingPlus",
-  "version_number": "1.0.0",
+  "version_number": "1.0.1",
   "website_url": "",
   "description": "Mute sliders for Valheim audio: master, music, sound effects, weather, wolf pups, shield generator, chicken love, portals. Synced with the game's own volumes.",
   "dependencies": [
     "denikson-BepInExPack_Valheim-5.4.2360",
     "ValheimModding-Jotunn-2.30.2",
-    "KydlDev-KydlCore-1.1.0"
+    "KydlDev-KydlCore-1.1.1"
   ]
 }

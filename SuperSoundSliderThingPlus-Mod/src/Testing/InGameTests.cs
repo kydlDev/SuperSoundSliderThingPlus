@@ -18,8 +18,8 @@ namespace SuperSoundSliderThingPlus.Testing
         /// The player config is bound and the mod is switched on.
         static string Startup_ConfigBound()
         {
-            if (ModSettings.EnableAll == null) return "FAIL: ModSettings.Bind did not run (EnableAll is null)";
-            return ModSettings.On ? "PASS: EnableAll on" : "SKIP: EnableAll is off in the config";
+            if (ModSettings.EnableMod == null) return "FAIL: ModSettings.Bind did not run (EnableMod is null)";
+            return ModSettings.On ? "PASS: EnableMod on" : "SKIP: EnableMod is off in the config";
         }
 
         /// The installer ran and the feature registry holds the mod's features (each started per its Enable switch).

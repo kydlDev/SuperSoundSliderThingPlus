@@ -15,6 +15,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Domain
         /// <summary>Expected outcome: Success with the RMS (0..1+) of the first `count` samples; Rejected for no samples or a null array.</summary>
         internal static OperationResponse<float> Rms(float[] samples, int count)
         {
+            // Stryker disable once Equality : equivalent - count 0 gives 0 / 0 = NaN, which is rejected with the same reason a few lines below
             if (samples == null || count <= 0 || count > samples.Length) return OperationResponse<float>.Rejected(NotMeasurable);
             double sum = 0;
             for (int i = 0; i < count; i++)
@@ -37,6 +38,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Domain
                 return OperationResponse<float>.Rejected(BadLimits);
             if (!IsNumber(measuredRms) || measuredRms < SilenceBelow) return OperationResponse<float>.Success(1f, NotMeasurable);
             float gain = targetRms / measuredRms;
+            // Stryker disable once Equality : equivalent - at the limit itself both comparisons give the same value
             float limited = gain < minGain ? minGain : gain > maxGain ? maxGain : gain;
             return OperationResponse<float>.Success(limited, FloatCompare.Same(limited, gain) ? Exact : Limited);
         }

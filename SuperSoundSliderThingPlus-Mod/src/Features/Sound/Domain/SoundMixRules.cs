@@ -33,6 +33,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Domain
 
         private static bool IsNumber(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
 
+        // Stryker disable once Equality : equivalent - at the limit itself both comparisons give the same value
         private static float Clamp(float mute) => mute < MinMute ? MinMute : mute > MaxMute ? MaxMute : mute;
     }
 }

@@ -16,6 +16,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Domain
         internal static OperationResponse<float> MuteFromVolume(float volume)
         {
             if (!IsNumber(volume)) return OperationResponse<float>.Rejected(NotANumber);
+            // Stryker disable once Equality : equivalent - at the limit itself both comparisons give the same value
             float v = volume < 0f ? 0f : volume > 1f ? 1f : volume;
             float mute = (float)System.Math.Round((1f - v) * 100f, 1);
             return OperationResponse<float>.Success(mute, FloatCompare.Same(v, volume) ? InRange : Clamped);
@@ -25,6 +26,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Domain
         internal static OperationResponse<float> VolumeFromMute(float mute)
         {
             if (!IsNumber(mute)) return OperationResponse<float>.Rejected(NotANumber);
+            // Stryker disable once Equality : equivalent - at the limit itself both comparisons give the same value
             float m = mute < 0f ? 0f : mute > 100f ? 100f : mute;
             return OperationResponse<float>.Success(1f - m / 100f, FloatCompare.Same(m, mute) ? InRange : Clamped);
         }

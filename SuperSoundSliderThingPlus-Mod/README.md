@@ -19,7 +19,7 @@ Client-side audio control for Valheim: a master volume, the music, and a mute sl
 
 | Section | Setting | Default | What it does |
 |---------|---------|---------|--------------|
-| General | EnableAll | true | Switches the whole mod on / off while playing |
+| General | Enable mod | true | Switches the whole mod on / off while playing |
 | General | MasterMute | 0 | Master mute level (the game's master volume) |
 | General | MusicMute | 0 | Music mute level (the game's music volume) |
 | General | SoundEffectsMute | 0 | Sound effects without a slider of their own (the game's sound effects volume) |

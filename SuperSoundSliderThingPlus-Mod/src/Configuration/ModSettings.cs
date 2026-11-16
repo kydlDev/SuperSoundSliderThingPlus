@@ -14,10 +14,10 @@ namespace SuperSoundSliderThingPlus.Configuration
     internal static class ModSettings
     {
         // [General]
-        public static ConfigEntry<bool> EnableAll;
+        public static ConfigEntry<bool> EnableMod;
         // no MenuKey: the mod's menu is a set of tabs in the KY hub (F6, KydlCore), see src/Presentation/Hub/Registration/HubTabs.cs
-        // One functionality = one config section with its own switch (PROJECT_RULES 11), only when the mod has several of them, e.g.:
-        //   public static ConfigEntry<bool> ColoursEnable;   // c.Bind("Colours", "Enable", true, "...");  on only when On && ColoursEnable.Value
+        // One functionality = one [General] switch "Enable <Category>" (PROJECT_RULES 11), only when the mod has several of them, e.g.:
+        //   public static ConfigEntry<bool> ColoursEnable;   // c.Bind("General", "Enable Colours", Old(c, "Colours", "Enable"), "...");  on only when On && ColoursEnable.Value
         // [General] the sliders (D-004, D-011): every one is a MUTE level in percent, 0 = full loudness, 100 = muted; the master scales all others
         public static ConfigEntry<float> MasterMute, EffectsMute, WeatherMute, WolfPupMute, ShieldGeneratorMute, ChickenLoveMute, PortalMute, MusicMute;
         // [General] matching (D-005 step 2): off by default, the player switches it on
@@ -25,10 +25,10 @@ namespace SuperSoundSliderThingPlus.Configuration
         // [DebugLog]
         public static ConfigEntry<bool> DebugLog;
 
-        /// Is the mod switched on ([General] EnableAll)? Off = inert: no effects; nothing built is removed.
-        public static bool On { get { return EnableAll == null || EnableAll.Value; } }
+        /// Is the mod switched on ([General] Enable mod)? Off = inert: no effects; nothing built is removed.
+        public static bool On { get { return EnableMod == null || EnableMod.Value; } }
 
-        /// The gate of one feature (IFeature.IsEnabled): EnableAll AND its own [<Feature>] Enable (null = a mod with one feature: EnableAll only).
+        /// The gate of one feature (IFeature.IsEnabled): Enable mod AND its own [General] Enable <Feature> (null = a mod with one feature: Enable mod only).
         /// Read at call time, never cached, so a config change applies at once.
         public static bool FeatureOn(ConfigEntry<bool> ownEnable) { return On && (ownEnable == null || ownEnable.Value); }
 
@@ -48,12 +48,32 @@ namespace SuperSoundSliderThingPlus.Configuration
         public static readonly Tunable<float> MeasureSeconds = new Tunable<float>("Loudness", "MeasureSeconds", 1f, 0.1f, 5f,
             "Dev-only (seconds 0.1-5): the length of the window from the middle of a clip that is measured.");
 
+    /// The value the player had in an entry that moved (still in the file as an orphan before DropRemoved deletes it): the first of the
+    /// given (section, key, section, key, ...) pairs that holds a bool; true when there is none.
+    private static bool Old(ConfigFile c, params string[] sectionAndKey)
+    {
+        // OrphanedEntries is not a public member of every BepInEx 5 build (ConfigTools.DropRemoved reaches it the same way)
+        System.Reflection.PropertyInfo orphans = typeof(ConfigFile).GetProperty("OrphanedEntries", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+        var dict = orphans != null ? orphans.GetValue(c, null) as System.Collections.IDictionary : null;
+        for (int i = 0; dict != null && i + 1 < sectionAndKey.Length; i += 2)
+        {
+            var def = new ConfigDefinition(sectionAndKey[i], sectionAndKey[i + 1]);
+            bool b;
+            if (dict.Contains(def) && bool.TryParse((dict[def] as string ?? "").Trim(), out b))
+            {
+                return b;
+            }
+        }
+
+        return true;
+    }
+
         /// Expected outcome: every player entry is bound (returns that check).
         public static bool Bind(ConfigFile c)
         {
             var savedLines = ConfigTools.Capture(c);     // before the first Bind: every Bind saves the file with what BepInEx parsed
 
-            EnableAll = c.Bind("General", "EnableAll", true,
+            EnableMod = c.Bind("General", "Enable mod", Old(c, "General", "EnableAll"),
                 "Switches the whole mod on / off while playing. Off: no effects from this mod; things already built stay in the world.");
             DebugLog = c.Bind("DebugLog", "Enable", false,
                 "Writes detailed lines about everything the mod does to the BepInEx log (for bug reports). Leave off while playing normally.");
@@ -72,9 +92,9 @@ namespace SuperSoundSliderThingPlus.Configuration
             ConfigTools.ApplyCommaFix(c, savedLines);    // after every Bind: "3,5" typed by hand means 3.5, not 35
             ConfigTools.DropRemoved(c);
 
-            EnableAll.SettingChanged += (s, e) => ModLog.Info("Config: EnableAll = " + EnableAll.Value + (EnableAll.Value ? ", the mod is on" : ", the mod is inert (no effects)"));
-            ModLog.Verbose("Config: bound (EnableAll " + EnableAll.Value + ", debug log " + DebugLog.Value + ")");
-            return EnableAll != null && DebugLog != null && MasterMute != null && ChickenLoveMute != null && DefaultsApplied != null;
+            EnableMod.SettingChanged += (s, e) => ModLog.Info("Config: Enable mod = " + EnableMod.Value + (EnableMod.Value ? ", the mod is on" : ", the mod is inert (no effects)"));
+            ModLog.Verbose("Config: bound (Enable mod " + EnableMod.Value + ", debug log " + DebugLog.Value + ")");
+            return EnableMod != null && DebugLog != null && MasterMute != null && ChickenLoveMute != null && DefaultsApplied != null;
         }
 
         private static ConfigEntry<float> BindMute(ConfigFile c, string key, string description)

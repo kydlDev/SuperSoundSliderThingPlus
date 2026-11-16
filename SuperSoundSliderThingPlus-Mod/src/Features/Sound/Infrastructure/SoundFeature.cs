@@ -16,7 +16,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Infrastructure
     /// <summary>
     /// The sound feature adapter (MIGRATION_DECISIONS A4): wires the SetMute handler once, and on Start / Stop adds / removes what the feature
     /// contributes (its KY hub tab, the master sync). The Harmony patches in Integrations/Harmony read the factors through
-    /// <see cref="SoundLevels"/> while <see cref="Running"/>. Gate: EnableAll only (one functionality).
+    /// <see cref="SoundLevels"/> while <see cref="Running"/>. Gate: Enable mod only (one functionality).
     /// The master slider IS the game's master volume (D-017): a change of the slider is pushed to the game, the game's volume (also at game
     /// start) is pulled into the slider; the first time the game starts with the mod installed the category sliders start at 50 (D-018).
     /// </summary>

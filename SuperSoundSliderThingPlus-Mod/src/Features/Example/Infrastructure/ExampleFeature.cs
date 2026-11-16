@@ -12,8 +12,8 @@ namespace SuperSoundSliderThingPlus.Features.Example.Infrastructure
 {
     /// <summary>
     /// EXAMPLE feature (template; replace / rename). The adapter: wires the handler + executor once, owns the game-side state, and on
-    /// Start / Stop adds / removes everything it contributes (here: its KY hub tab). Gate: EnableAll only (a mod with several features gives
-    /// each one its own [<Feature>] Enable and passes it to ModSettings.FeatureOn).
+    /// Start / Stop adds / removes everything it contributes (here: its KY hub tab). Gate: Enable mod only (a mod with several features gives
+    /// each one its own [General] Enable <Feature> and passes it to ModSettings.FeatureOn).
     /// </summary>
     internal sealed class ExampleFeature : IFeature
     {
