@@ -31,6 +31,7 @@
       "name": "kc.hubMods",
       "contains": "com.kydldev.SuperSoundSliderThingPlus"
     },
+    { "do": "hook", "name": "kc.hubTabCount", "args": { "mod": "com.kydldev.SuperSoundSliderThingPlus" }, "expect": 3, "label": "3 tabs: the config groups General + DebugLog, and the Sound feature tab (user, 2026-11-16: every config category is its own tab)" },
     {
       "do": "hook",
       "name": "kc.hubTabs",
