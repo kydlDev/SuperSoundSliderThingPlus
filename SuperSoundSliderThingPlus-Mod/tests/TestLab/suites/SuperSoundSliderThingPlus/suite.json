@@ -15,55 +15,67 @@
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
                                 "section":  "General",
-                                "key":  "Enable mod",
+                                "key":  "Enable Mod",
                                 "value":  "true"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
                                 "section":  "General",
-                                "key":  "MasterMute",
+                                "key":  "Enable Game Menu Sounds",
+                                "value":  "true"
+                            },
+                            {
+                                "guid":  "com.kydldev.SuperSoundSliderThingPlus",
+                                "section":  "General",
+                                "key":  "Enable Special Adjustments",
+                                "value":  "true"
+                            },
+                            {
+                                "guid":  "com.kydldev.SuperSoundSliderThingPlus",
+                                "section":  "Game menu sounds",
+                                "key":  "Master mute",
                                 "value":  "100"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "SoundEffectsMute",
+                                "section":  "Game menu sounds",
+                                "key":  "Sound Effects mute",
                                 "value":  "0"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "WeatherMute",
+                                "section":  "Special adjustments",
+                                "key":  "Weather mute",
                                 "value":  "0"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "WolfPupMute",
+                                "section":  "Special adjustments",
+                                "key":  "Wolf Pup mute",
                                 "value":  "0"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "ShieldGeneratorMute",
+                                "section":  "Special adjustments",
+                                "key":  "Shield Generator mute",
                                 "value":  "0"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "ChickenLoveMute",
+                                "section":  "Special adjustments",
+                                "key":  "Chicken Love mute",
                                 "value":  "0"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "PortalMute",
+                                "section":  "Special adjustments",
+                                "key":  "Portal mute",
                                 "value":  "0"
                             },
                             {
                                 "guid":  "com.kydldev.SuperSoundSliderThingPlus",
-                                "section":  "General",
-                                "key":  "MusicMute",
+                                "section":  "Game menu sounds",
+                                "key":  "Music mute",
                                 "value":  "0"
                             },
                             {

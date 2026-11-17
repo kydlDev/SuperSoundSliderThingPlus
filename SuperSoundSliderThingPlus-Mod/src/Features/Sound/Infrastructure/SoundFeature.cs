@@ -16,7 +16,7 @@ namespace SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 /// <summary>
 /// The sound feature adapter (MIGRATION_DECISIONS A4): wires the SetMute handler once, and on Start / Stop adds / removes what the feature
 /// contributes (its KY hub tab, the master sync). The Harmony patches in Integrations/Harmony read the factors through
-/// <see cref="SoundLevels"/> while <see cref="Running"/>. Gate: Enable mod only (one functionality).
+/// <see cref="SoundLevels"/> while <see cref="Running"/>. Gate: Enable Mod only (one functionality).
 /// The master slider IS the game's master volume (D-017): a change of the slider is pushed to the game, the game's volume (also at game
 /// start) is pulled into the slider; the first time the game starts with the mod installed the category sliders start at 50 (D-018).
 /// </summary>
@@ -80,7 +80,7 @@ internal sealed class SoundFeature : IFeature
     /// <summary>Game -> slider: the master, music and sound effects sliders take the game's volumes. Expected outcome: true when every slider matches or was set.</summary>
     internal bool Pull()
     {
-        if (!_running) return false;
+        if (!_running || !ModSettings.MenuSoundsOn) return false;      // [Game menu sounds] switched off: the game's volumes stay the game's
         bool ok = true;
         foreach (SoundSlider slider in Synced) ok &= PullOne(slider);
         return ok;
@@ -125,7 +125,7 @@ internal sealed class SoundFeature : IFeature
 
     private void Push(SoundSlider slider)
     {
-        if (!_running || _pulling) return;
+        if (!_running || _pulling || !ModSettings.MenuSoundsOn) return;
         var volume = MasterVolumeRules.VolumeFromMute(SoundLevels.MuteOf(slider));
         if (!volume.IsSuccess) return;
         string key = KeyOf(slider);

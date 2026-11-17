@@ -31,6 +31,12 @@ internal static class SoundMixRules
         return OperationResponse<float>.Success(level, FloatCompare.Same(level, requested) ? InRange : Clamped);
     }
 
+    /// <summary>Master, Music and Sound Effects are the "Game menu sounds" group; every other slider is a "Special adjustment" (user 2026-11-17).</summary>
+    internal static bool IsMenuSlider(SoundSlider slider) => slider == SoundSlider.Master || slider == SoundSlider.Music || slider == SoundSlider.Effects;
+
+    /// <summary>Does the slider work now? Its group's [General] Enable switch decides (<paramref name="menuOn"/> for the menu group, <paramref name="specialOn"/> for the rest).</summary>
+    internal static bool GroupOn(SoundSlider slider, bool menuOn, bool specialOn) => IsMenuSlider(slider) ? menuOn : specialOn;
+
     private static bool IsNumber(float value) => !float.IsNaN(value) && !float.IsInfinity(value);
 
     // Stryker disable once Equality : equivalent - at the limit itself both comparisons give the same value

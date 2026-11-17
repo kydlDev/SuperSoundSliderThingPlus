@@ -19,12 +19,14 @@ Client-side audio control for Valheim: a master volume, the music, and a mute sl
 
 | Section | Setting | Default | What it does |
 |---------|---------|---------|--------------|
-| General | Enable mod | true | Switches the whole mod on / off while playing |
-| General | MasterMute | 0 | Master mute level (the game's master volume) |
-| General | MusicMute | 0 | Music mute level (the game's music volume) |
-| General | SoundEffectsMute | 0 | Sound effects without a slider of their own (the game's sound effects volume) |
-| General | WeatherMute / WolfPupMute / ShieldGeneratorMute / ChickenLoveMute / PortalMute | 0 (50 after the first start) | Mute level of that group |
+| General | Enable Mod | true | Switches the whole mod on / off while playing |
+| General | Enable Game Menu Sounds | true | The three sliders of Game menu sounds work (off = they do nothing, the game's volumes stay as they are) |
+| General | Enable Special Adjustments | true | The five sliders of Special adjustments work (off = those sounds are left alone) |
 | General | EqualizeLoudness | true | Match the loudness of all sounds |
+| Game menu sounds | Master mute | 0 | Master mute level (the game's master volume) |
+| Game menu sounds | Music mute | 0 | Music mute level (the game's music volume) |
+| Game menu sounds | Sound Effects mute | 0 | Sound effects without a slider of their own (the game's sound effects volume) |
+| Special adjustments | Portal mute / Shield Generator mute / Weather mute / Wolf Pup mute / Chicken Love mute | 0 (50 after the first start) | Mute level of that group |
 | DebugLog | Enable | false | Detailed lines in the BepInEx log for bug reports |
 
 Edits to the file are picked up while the game runs.

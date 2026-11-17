@@ -18,6 +18,8 @@ internal static class SoundLevels
     {
         SoundFeature feature = SoundFeature.Instance;
         if (feature == null || !feature.Running || ModSettings.MasterMute == null) return 1f;
+        // a group whose [General] Enable switch is off leaves its sounds alone (user 2026-11-17)
+        if (!SoundMixRules.GroupOn(ToSlider(category), ModSettings.MenuSoundsOn, ModSettings.SpecialOn)) return 1f;
         // the master mute is the game's own master volume (D-017): it already scales every sound through the mixer, so only the category counts here
         var r = SoundMixRules.Factor(SoundMixRules.MinMute, MuteOf(category));
         if (!r.IsSuccess) ModLog.Warn("SoundLevels: " + category + " factor rejected - " + r.Reason + " (the sound is left alone)");

@@ -27,7 +27,7 @@
                   {
                       "do":  "setConfig",
                       "values":  {
-                                     "General/Enable mod":  false
+                                     "General/Enable Mod":  false
                                  }
                   },
                   {
@@ -51,7 +51,7 @@
                   {
                       "do":  "setConfig",
                       "values":  {
-                                     "General/Enable mod":  true
+                                     "General/Enable Mod":  true
                                  }
                   },
                   {

@@ -3,10 +3,12 @@
 ## 1.0.1
 
 - Changed: the menus of this mod take their text sizes, text colours and font from KydlCore. Needs KydlCore 1.1.1 or newer.
-- Changed: all the **Enable** switches are now together in `[General]` and have new names: `Enable mod` (was `EnableAll`) and `Enable Colours` (each was `Enable` in its own section). The values you had set are taken over; the old entries are removed from your config file.
+- Changed: all the **Enable** switches are now together in `[General]` and have new names: `Enable Mod` (was `EnableAll`) and `Enable Colours` (each was `Enable` in its own section). The values you had set are taken over; the old entries are removed from your config file.
+- Changed: `Enable Mod` is now the first setting of `[General]`, in the F1 menu and in the F6 hub (your value is taken over).
+- Changed: the sliders are in two new categories: **Game menu sounds** (`Master mute`, `Music mute`, `Sound Effects mute`) and **Special adjustments** (`Portal mute`, `Shield Generator mute`, `Weather mute`, `Wolf Pup mute`, `Chicken Love mute`). Each category has its own switch in `[General]` (`Enable Game Menu Sounds`, `Enable Special Adjustments`). Your values are taken over.
 
 ### Testing
-- Unit tests: 143 passed. Integration tests: 46 passed.
+- Unit tests: 159 passed. Integration tests: 47 passed.
 - Property-based tests (FsCheck, included in the unit tests above): 13 property checks with generated inputs.
 - Coverage of the testable code: 100%. Mutation testing (Stryker): 100% of the mutants are caught by the tests.
 - Performance benchmarks (BenchmarkDotNet): 5.
