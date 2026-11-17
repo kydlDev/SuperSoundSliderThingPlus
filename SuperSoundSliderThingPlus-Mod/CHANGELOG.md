@@ -1,4 +1,4 @@
-# Changelog
+﻿# Changelog
 
 ## 1.0.1
 
@@ -6,6 +6,7 @@
 - Changed: all the **Enable** switches are now together in `[General]` and have new names: `Enable Mod` (was `EnableAll`) and `Enable Colours` (each was `Enable` in its own section). The values you had set are taken over; the old entries are removed from your config file.
 - Changed: `Enable Mod` is now the first setting of `[General]`, in the F1 menu and in the F6 hub (your value is taken over).
 - Changed: the sliders are in two new categories: **Game menu sounds** (`Master mute`, `Music mute`, `Sound Effects mute`) and **Special adjustments** (`Portal mute`, `Shield Generator mute`, `Weather mute`, `Wolf Pup mute`, `Chicken Love mute`). Each category has its own switch in `[General]` (`Enable Game Menu Sounds`, `Enable Special Adjustments`). Your values are taken over.
+- Changed: the separate **Sound** tab in the F6 hub is gone. The sliders were shown twice; they are now only in the **Game menu sounds** and **Special adjustments** tabs (same values, nothing to do).
 
 ### Testing
 - Unit tests: 159 passed. Integration tests: 47 passed.

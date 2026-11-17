@@ -1,4 +1,4 @@
-using KydlCore.Common;
+﻿using KydlCore.Common;
 using KydlCore.Core;
 using SuperSoundSliderThingPlus.Bootstrap;
 using SuperSoundSliderThingPlus.Configuration;
@@ -7,15 +7,13 @@ using SuperSoundSliderThingPlus.Features.Sound.Domain;
 using SuperSoundSliderThingPlus.Features.Sound.Execution;
 using SuperSoundSliderThingPlus.Integrations.Valheim;
 using SuperSoundSliderThingPlus.Presentation.Hub.Commands;
-using SuperSoundSliderThingPlus.Presentation.Hub.Registration;
-using SuperSoundSliderThingPlus.Presentation.Hub.ViewModels;
 using UnityEngine;
 
 namespace SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 
 /// <summary>
 /// The sound feature adapter (MIGRATION_DECISIONS A4): wires the SetMute handler once, and on Start / Stop adds / removes what the feature
-/// contributes (its KY hub tab, the master sync). The Harmony patches in Integrations/Harmony read the factors through
+/// contributes (the master sync; its sliders are config entries the KY hub shows in its config tabs). The Harmony patches in Integrations/Harmony read the factors through
 /// <see cref="SoundLevels"/> while <see cref="Running"/>. Gate: Enable Mod only (one functionality).
 /// The master slider IS the game's master volume (D-017): a change of the slider is pushed to the game, the game's volume (also at game
 /// start) is pulled into the slider; the first time the game starts with the mod installed the category sliders start at 50 (D-018).
@@ -57,12 +55,11 @@ internal sealed class SoundFeature : IFeature
         ModSettings.MasterMute.SettingChanged += OnMasterChanged;
         ModSettings.MusicMute.SettingChanged += OnMusicChanged;
         ModSettings.EffectsMute.SettingChanged += OnEffectsChanged;
-        bool tab = HubTabs.AddSoundTab(() => { Pull(); return SoundPageModel.Build(_deps.Commands); });
         Pull();
         GameVolume.Apply(true);
         ApplyFirstRunDefaults();
-        ModLog.State("sound feature", "stopped", "started", "patches act, master follows the game volume, hub tab added " + tab);
-        return _running && tab;
+        ModLog.State("sound feature", "stopped", "started", "patches act, master follows the game volume (the sliders are in the hub's config tabs, no own tab)");
+        return _running;
     }
 
     public bool Stop()
@@ -72,9 +69,8 @@ internal sealed class SoundFeature : IFeature
         ModSettings.MusicMute.SettingChanged -= OnMusicChanged;
         ModSettings.EffectsMute.SettingChanged -= OnEffectsChanged;
         GameVolume.Apply(false);   // the game's own sound effects volume applies again
-        bool gone = HubTabs.RemoveSoundTab();
-        ModLog.State("sound feature", "started", "stopped", "patches leave the sounds alone, hub tab removed " + gone);
-        return !_running && gone;
+        ModLog.State("sound feature", "started", "stopped", "patches leave the sounds alone");
+        return !_running;
     }
 
     /// <summary>Game -> slider: the master, music and sound effects sliders take the game's volumes. Expected outcome: true when every slider matches or was set.</summary>

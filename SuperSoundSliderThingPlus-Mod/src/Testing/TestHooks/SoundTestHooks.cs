@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using KydlCore.Common;
 using SuperSoundSliderThingPlus.Bootstrap;
@@ -20,10 +20,6 @@ internal static class SoundTestHooks
     private const float AudibleAbove = 0.001f, SilentBelow = 0.0001f;
     private static GameObject _probe;
     private static AudioSource _probeSource;
-
-    /// <summary>Is the sound tab registered in the KY hub right now (no stale tab after the feature stops)?</summary>
-    [TestHook("SuperSoundSliderThingPlus.sound.tab")]
-    static bool SoundTab() { return global::KydlCore.Features.Hub.Contracts.KyHub.HasTab(Plugin.ModGuid, HubTabs.SoundId); }
 
     /// <summary>The hub slider's path (dispatcher -> handler -> rules -> executor). Returns the response, e.g. "Success: clamped into range".</summary>
     [TestHook("SuperSoundSliderThingPlus.mute.set")]

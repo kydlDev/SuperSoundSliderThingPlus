@@ -1,79 +1,88 @@
-{
-  "name": "hub-page",
-  "description": "KydlCore acceptance (spec 4): the mod is in the F6 hub with its tabs, the page renders through the shared UI, the hub opens and closes cleanly",
-  "timeout": 60,
-  "steps": [
-    {
-      "do": "hook",
-      "name": "SuperSoundSliderThingPlus.arena",
-      "contains": "arena at",
-      "label": "start on the arena spot"
-    },
-    {
-      "do": "hook",
-      "name": "kc.hubOpen",
-      "args": {
-        "mod": "com.kydldev.SuperSoundSliderThingPlus"
-      },
-      "expect": true
-    },
-    {
-      "do": "wait",
-      "until": {
-        "check": "hook",
-        "name": "kc.hubIsOpen",
-        "expect": true
-      },
-      "timeout": 5
-    },
-    {
-      "do": "hook",
-      "name": "kc.hubMods",
-      "contains": "com.kydldev.SuperSoundSliderThingPlus"
-    },
-    { "do": "hook", "name": "kc.hubTabCount", "args": { "mod": "com.kydldev.SuperSoundSliderThingPlus" }, "expect": 3, "label": "3 tabs: the config groups General + DebugLog, and the Sound feature tab (user, 2026-11-16: every config category is its own tab)" },
-    {
-      "do": "hook",
-      "name": "kc.hubTabs",
-      "args": {
-        "mod": "com.kydldev.SuperSoundSliderThingPlus"
-      },
-      "contains": "sound",
-      "label": "sound tab"
-    },
-    {
-      "do": "hook",
-      "name": "kc.hubTabs",
-      "args": {
-        "mod": "com.kydldev.SuperSoundSliderThingPlus"
-      },
-      "contains": "settings",
-      "label": "settings tab"
-    },
-    {
-      "do": "check",
-      "check": "uiVisible",
-      "text": "Mute levels",
-      "label": "the sound page is drawn"
-    },
-    {
-      "do": "hook",
-      "name": "kc.hubClose"
-    },
-    {
-      "do": "wait",
-      "until": {
-        "check": "hook",
-        "name": "kc.hubIsOpen",
-        "expect": false
-      },
-      "timeout": 5
-    }
-  ],
-  "asserts": [
-    {
-      "check": "noErrors",
-      "source": "SuperSoundSliderThingPlus"
-    }
-  ]
+﻿{
+    "name":  "hub-page",
+    "description":  "KydlCore acceptance (spec 4): the mod is in the F6 hub with its config tabs only (user, 2026-11-17: no own Sound tab, the sliders are in Game menu sounds and Special adjustments), the page renders through the shared UI, the hub opens and closes cleanly",
+    "timeout":  60,
+    "steps":  [
+                  {
+                      "do":  "hook",
+                      "name":  "SuperSoundSliderThingPlus.arena",
+                      "contains":  "arena at",
+                      "label":  "start on the arena spot"
+                  },
+                  {
+                      "do":  "hook",
+                      "name":  "kc.hubOpen",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus"
+                               },
+                      "expect":  true
+                  },
+                  {
+                      "do":  "wait",
+                      "until":  {
+                                    "check":  "hook",
+                                    "name":  "kc.hubIsOpen",
+                                    "expect":  true
+                                },
+                      "timeout":  5
+                  },
+                  {
+                      "do":  "hook",
+                      "name":  "kc.hubMods",
+                      "contains":  "com.kydldev.SuperSoundSliderThingPlus"
+                  },
+                  {
+                      "do":  "hook",
+                      "name":  "kc.hubTabCount",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus"
+                               },
+                      "expect":  4,
+                      "label":  "4 tabs: the config groups General, Game menu sounds, Special adjustments and DebugLog (no Sound tab)"
+                  },
+                  {
+                      "do":  "hook",
+                      "name":  "kc.hubHasTab",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus",
+                                   "tab":  "sound"
+                               },
+                      "expect":  false,
+                      "label":  "no own Sound tab any more"
+                  },
+                  {
+                      "do":  "hook",
+                      "name":  "kc.hubTabs",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus"
+                               },
+                      "contains":  "settings",
+                      "label":  "settings tab"
+                  },
+                  {
+                      "do":  "check",
+                      "check":  "uiVisible",
+                      "text":  "Enable Mod",
+                      "label":  "the General tab is drawn first"
+                  },
+                  {
+                      "do":  "hook",
+                      "name":  "kc.hubClose"
+                  },
+                  {
+                      "do":  "wait",
+                      "until":  {
+                                    "check":  "hook",
+                                    "name":  "kc.hubIsOpen",
+                                    "expect":  false
+                                },
+                      "timeout":  5
+                  }
+              ],
+    "asserts":  [
+                    {
+                        "check":  "noErrors",
+                        "source":  "SuperSoundSliderThingPlus"
+                    }
+                ]
 }

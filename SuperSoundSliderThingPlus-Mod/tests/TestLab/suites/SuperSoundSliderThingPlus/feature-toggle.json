@@ -1,6 +1,6 @@
-{
+﻿{
     "name":  "feature-toggle",
-    "description":  "EnableAll off stops every feature and removes its hub tab (no stale UI registration); on starts them again (PROJECT_RULES 11, spec 4)",
+    "description":  "Enable Mod off stops every feature, on starts them again (PROJECT_RULES 11, spec 4). The mod has no feature tab (user, 2026-11-17): its four config tabs stay in the hub either way and no Sound tab comes back",
     "timeout":  60,
     "steps":  [
                   {
@@ -20,9 +20,12 @@
                   },
                   {
                       "do":  "hook",
-                      "name":  "SuperSoundSliderThingPlus.sound.tab",
-                      "expect":  true,
-                      "label":  "tab registered"
+                      "name":  "kc.hubTabCount",
+                      "expect":  4,
+                      "label":  "4 config tabs, no feature tab (tab registered)",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus"
+                               }
                   },
                   {
                       "do":  "setConfig",
@@ -44,9 +47,12 @@
                   },
                   {
                       "do":  "hook",
-                      "name":  "SuperSoundSliderThingPlus.sound.tab",
-                      "expect":  false,
-                      "label":  "tab removed while off"
+                      "name":  "kc.hubTabCount",
+                      "expect":  4,
+                      "label":  "4 config tabs, no feature tab (tab removed while off)",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus"
+                               }
                   },
                   {
                       "do":  "setConfig",
@@ -68,9 +74,12 @@
                   },
                   {
                       "do":  "hook",
-                      "name":  "SuperSoundSliderThingPlus.sound.tab",
-                      "expect":  true,
-                      "label":  "tab back"
+                      "name":  "kc.hubTabCount",
+                      "expect":  4,
+                      "label":  "4 config tabs, no feature tab (tab back)",
+                      "args":  {
+                                   "mod":  "com.kydldev.SuperSoundSliderThingPlus"
+                               }
                   }
               ],
     "asserts":  [

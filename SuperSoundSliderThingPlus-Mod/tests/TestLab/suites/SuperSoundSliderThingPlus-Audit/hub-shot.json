@@ -1,6 +1,6 @@
-{
+﻿{
   "name": "hub-shot",
-  "description": "Opens the mod's hub page (Sound tab with all eight rows incl. Music) and takes a picture through GameProbe; a person looks at it",
+  "description": "Opens the mod's hub page (the General tab first; the eight sliders are in the Game menu sounds and Special adjustments tabs, no own Sound tab since 2026-11-17) and takes a picture through GameProbe; a person looks at it",
   "timeout": 90,
   "steps": [
     { "do": "hook", "name": "SuperSoundSliderThingPlus.arena", "contains": "arena at", "label": "start on the arena spot" },
