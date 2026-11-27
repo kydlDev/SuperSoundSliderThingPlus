@@ -1,3 +1,4 @@
+using SuperSoundSliderThingPlus.Core;
 namespace SuperSoundSliderThingPlus.Features.Sound.Domain;
 
 /// <summary>
@@ -27,9 +28,10 @@ internal sealed class LoudnessEstimate
     /// <summary>Expected outcome: true when the block was used; false for a silent, negative, NaN / infinite block or when full.</summary>
     internal bool Add(float blockRms)
     {
-        if (!WantsMore || float.IsNaN(blockRms) || float.IsInfinity(blockRms) || blockRms < LoudnessRules.SilenceBelow) return false;
+        if (RuleLog.IsOn()) RuleLog.Every("LoudnessEstimate.Add", 2d, $"LoudnessEstimate.Add(blockRms={blockRms})");
+        if (!WantsMore || float.IsNaN(blockRms) || float.IsInfinity(blockRms) || blockRms < LoudnessRules.SilenceBelow) { if (RuleLog.IsOn()) RuleLog.Every("LoudnessEstimate.Add:32", 2d, $"LoudnessEstimate.Add: returns false (line 32) - inputs (blockRms={blockRms})"); return false; }
         _sumPower += (double)blockRms * blockRms;
         _blocks++;
-        return true;
+        { if (RuleLog.IsOn()) RuleLog.Every("LoudnessEstimate.Add:35", 2d, $"LoudnessEstimate.Add: returns true (line 35) - inputs (blockRms={blockRms})"); return true; }
     }
 }

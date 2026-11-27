@@ -1,4 +1,4 @@
-﻿{
+{
     "name":  "feature-toggle",
     "description":  "Enable Mod off stops every feature, on starts them again (PROJECT_RULES 11, spec 4). The mod has no feature tab (user, 2026-11-17): its four config tabs stay in the hub either way and no Sound tab comes back",
     "timeout":  60,
@@ -80,8 +80,12 @@
                       "args":  {
                                    "mod":  "com.kydldev.SuperSoundSliderThingPlus"
                                }
-                  }
-              ],
+                  },
+    {
+      "do": "console",
+      "command": "killall"
+    }
+  ],
     "asserts":  [
                     {
                         "check":  "noErrors",

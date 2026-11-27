@@ -1,5 +1,7 @@
 using HarmonyLib;
 using SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
+using SuperSoundSliderThingPlus.Core;
+using KydlCore.Common;
 
 namespace SuperSoundSliderThingPlus.Integrations.Harmony;
 
@@ -15,6 +17,7 @@ internal static class AudioManPatch
     [HarmonyPostfix]
     private static void Started()
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"AudioManPatch.Started: AudioMan.Start ran, feature={(SoundFeature.Instance != null)}");
         SoundFeature feature = SoundFeature.Instance;
         if (feature != null) feature.Pull();
     }
@@ -23,6 +26,7 @@ internal static class AudioManPatch
     [HarmonyPostfix]
     private static void Updated()
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"AudioManPatch.Updated: AudioMan.Update ran, feature={(SoundFeature.Instance != null)}");
         SoundFeature feature = SoundFeature.Instance;
         if (feature != null) feature.Tick();
     }

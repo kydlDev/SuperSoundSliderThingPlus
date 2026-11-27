@@ -3,6 +3,8 @@ using SuperSoundSliderThingPlus.Features.Example.Domain;
 using SuperSoundSliderThingPlus.Features.Example.Infrastructure;
 using SuperSoundSliderThingPlus.Presentation.Hub.Commands;
 using SuperSoundSliderThingPlus.Ui;
+using SuperSoundSliderThingPlus.Core;
+using KydlCore.Common;
 
 namespace SuperSoundSliderThingPlus.Presentation.Hub.ViewModels;
 
@@ -15,6 +17,7 @@ internal static class ExamplePageModel
 {
     internal static ExamplePage Build(ExampleFeature feature, CommandDispatcher commands)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"ExamplePageModel.Build(feature={feature}, commands={commands})");
         return new ExamplePage(feature.Value, ExampleRules.Min, ExampleRules.Max, v => ExampleCommands.SetValue(commands, v));
     }
 }

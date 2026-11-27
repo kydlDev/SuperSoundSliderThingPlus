@@ -340,6 +340,10 @@
         "value": 0
       },
       "contains": "Success"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

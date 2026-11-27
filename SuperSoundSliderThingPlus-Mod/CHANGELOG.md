@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.0.2
+
+- Changed: needs KydlCore 1.2.0 or newer; Jotunn is no longer needed (the version check on joining a server comes from KydlCore, as before: only when both sides have the mod the versions must match).
+- Changed: much more detailed debug log (`[DebugLog] Enable`): every step says what it did and with which values, every early stop says why, and frequent lines are throttled so the log stays readable.
+- Docs: the FAQ has 11 questions.
+
 ## 1.0.1
 
 - Changed: the menus of this mod take their text sizes, text colours and font from KydlCore. Needs KydlCore 1.1.1 or newer.

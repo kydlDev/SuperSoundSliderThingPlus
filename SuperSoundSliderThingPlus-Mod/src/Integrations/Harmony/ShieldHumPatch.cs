@@ -3,6 +3,7 @@ using KydlCore.Common;
 using SuperSoundSliderThingPlus.Features.Sound.Domain;
 using SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 using UnityEngine;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Integrations.Harmony;
 
@@ -22,16 +23,17 @@ internal static class ShieldHumPatch
     /// <summary>Tests: what the patch tracks. Expected outcome: false until the patch has seen the hum source once.</summary>
     internal static bool TryGetLast(out float baseVolume, out float applied, out string clip)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"ShieldHumPatch.TryGetLast: tracked={(_tracked != null)}, base={_baseVolume:0.###}, applied={_applied:0.###}, clip={_clip}");
         baseVolume = _baseVolume;
         applied = _applied;
         clip = _clip;
-        return _tracked != null;
+        { var returnedAt30 = _tracked != null; if (RuleLog.IsOn()) ModLog.Verbose($"ShieldHumPatch.TryGetLast: returns {returnedAt30} (line 30)"); return returnedAt30; }
     }
 
     [HarmonyPostfix]
     private static void Postfix(AudioSource ___m_shieldHumSource)
     {
-        if (___m_shieldHumSource == null) return;
+        if (___m_shieldHumSource == null) { if (RuleLog.IsOn()) ModLog.Every("ShieldHumPatch.Postfix:36", 2d, $"ShieldHumPatch.Postfix: returns (line 36) - inputs (___m_shieldHumSource={___m_shieldHumSource})"); return; }
         if (!ReferenceEquals(___m_shieldHumSource, _tracked))
         {
             _tracked = ___m_shieldHumSource;

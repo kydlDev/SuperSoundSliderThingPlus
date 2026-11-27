@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using KydlCore.Common;
 using SuperSoundSliderThingPlus.Configuration;
 using UnityEngine;
+using SuperSoundSliderThingPlus.Core;
 
 // kydl:read-only-observer - this file only reads where characters are; it never moves, commands or spawns one (guard exemption, user 2026-11-10)
 namespace SuperSoundSliderThingPlus.Integrations.Valheim;
@@ -24,11 +25,12 @@ internal static class SoundOwner
         ModLog.Verbose("SoundOwner: " + sfx.gameObject.name + " root '" + rootName + "' nearest character '"
             + (nearest != null ? nearest.gameObject.name : "none") + "' at " + (nearest != null ? distance.ToString("F2") : "-") + " m (radius "
             + ModSettings.OwnerRadius.Value.ToString("F2") + " m)");
-        return owner;
+        { var returnedAt28 = owner; if (RuleLog.IsOn()) ModLog.Verbose($"SoundOwner.NameFor: returns {returnedAt28} (line 28)"); return returnedAt28; }
     }
 
     private static Character Nearest(Vector3 position, out float distance)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"SoundOwner.Nearest(position={position})");
         float radius = ModSettings.OwnerRadius.Value;
         float best = radius * radius;
         Character nearest = null;
@@ -43,6 +45,6 @@ internal static class SoundOwner
             nearest = c;
         }
         distance = nearest != null ? Mathf.Sqrt(best) : -1f;
-        return nearest;
+        { var returnedAt48 = nearest; if (RuleLog.IsOn()) ModLog.Verbose($"SoundOwner.Nearest: returns {returnedAt48} (line 48)"); return returnedAt48; }
     }
 }

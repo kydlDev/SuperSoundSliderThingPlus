@@ -1,4 +1,5 @@
 using System;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Features.Sound.Domain;
 
@@ -18,14 +19,15 @@ internal static class SoundClassifier
     /// <summary>Expected outcome: always a category; <see cref="SoundCategory.Effects"/> when nothing special matches. Null / empty names match nothing.</summary>
     internal static SoundCategory Classify(string soundName, string ownerName)
     {
+        if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify(soundName={soundName}, ownerName={ownerName})");
         string sound = Normalise(soundName);
         string owner = Normalise(ownerName);
-        if (sound.Contains(ShieldGeneratorWord) || owner.Contains(ShieldGeneratorWord)) return SoundCategory.ShieldGenerator;
-        if (sound.Contains(PortalWord) || owner.Contains(PortalWord)) return SoundCategory.Portal;
-        if (owner.Contains(WolfPupOwner)) return SoundCategory.WolfPup;
-        if (IsChickenLove(sound, owner)) return SoundCategory.ChickenLove;
-        if (IsWeather(sound)) return SoundCategory.Weather;
-        return SoundCategory.Effects;
+        if (sound.Contains(ShieldGeneratorWord) || owner.Contains(ShieldGeneratorWord)) { var returnedAt25 = SoundCategory.ShieldGenerator; if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify: returns {returnedAt25} (line 25)"); return returnedAt25; }
+        if (sound.Contains(PortalWord) || owner.Contains(PortalWord)) { var returnedAt26 = SoundCategory.Portal; if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify: returns {returnedAt26} (line 26)"); return returnedAt26; }
+        if (owner.Contains(WolfPupOwner)) { var returnedAt27 = SoundCategory.WolfPup; if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify: returns {returnedAt27} (line 27)"); return returnedAt27; }
+        if (IsChickenLove(sound, owner)) { var returnedAt28 = SoundCategory.ChickenLove; if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify: returns {returnedAt28} (line 28)"); return returnedAt28; }
+        if (IsWeather(sound)) { var returnedAt29 = SoundCategory.Weather; if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify: returns {returnedAt29} (line 29)"); return returnedAt29; }
+        { var returnedAt30 = SoundCategory.Effects; if (RuleLog.IsOn()) RuleLog.Verbose($"SoundClassifier.Classify: returns {returnedAt30} (line 30)"); return returnedAt30; }
     }
 
     private static bool IsChickenLove(string sound, string owner)

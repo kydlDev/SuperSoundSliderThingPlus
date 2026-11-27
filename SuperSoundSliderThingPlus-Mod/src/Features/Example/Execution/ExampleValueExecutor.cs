@@ -1,5 +1,6 @@
 using System;
 using KydlCore.Core;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Features.Example.Execution;
 
@@ -15,6 +16,7 @@ internal sealed class ExampleValueExecutor
 
     internal ExampleValueExecutor(IOwnership owner, Action<float> apply)
     {
+        if (RuleLog.IsOn()) RuleLog.Verbose($"ExampleValueExecutor.ExampleValueExecutor(owner={owner}, apply={apply})");
         if (owner == null) throw new ArgumentNullException("owner");
         if (apply == null) throw new ArgumentNullException("apply");
         _owner = owner;
@@ -24,8 +26,9 @@ internal sealed class ExampleValueExecutor
     /// Expected outcome: Success with the applied value; Rejected (nothing applied) when this client is not the owner.
     internal OperationResponse<float> Apply(float value)
     {
-        if (!_owner.IsOwner) return OperationResponse<float>.Rejected(NotOwner);
+        if (RuleLog.IsOn()) RuleLog.Every("ExampleValueExecutor.Apply", 2d, $"ExampleValueExecutor.Apply(value={value})");
+        if (!_owner.IsOwner) { var returnedAt30 = OperationResponse<float>.Rejected(NotOwner); if (RuleLog.IsOn()) RuleLog.Every("ExampleValueExecutor.Apply:30", 2d, $"ExampleValueExecutor.Apply: returns {returnedAt30} (line 30)"); return returnedAt30; }
         _apply(value);
-        return OperationResponse<float>.Success(value, Applied);
+        { var returnedAt32 = OperationResponse<float>.Success(value, Applied); if (RuleLog.IsOn()) RuleLog.Every("ExampleValueExecutor.Apply:32", 2d, $"ExampleValueExecutor.Apply: returns {returnedAt32} (line 32)"); return returnedAt32; }
     }
 }

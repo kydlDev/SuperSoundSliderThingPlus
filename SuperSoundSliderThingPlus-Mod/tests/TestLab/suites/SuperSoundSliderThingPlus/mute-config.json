@@ -81,6 +81,10 @@
       },
       "expect": 0,
       "label": "other sliders untouched"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

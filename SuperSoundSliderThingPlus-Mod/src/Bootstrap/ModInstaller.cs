@@ -3,6 +3,7 @@ using KydlCore.Common;
 using KydlCore.Core;
 using SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 using SuperSoundSliderThingPlus.Presentation.Hub.Registration;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Bootstrap;
 
@@ -22,6 +23,7 @@ internal sealed class ModInstaller
 
     internal ModInstaller(ConfigFile config)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"ModInstaller.ModInstaller(config={config})");
         _config = config;
         Deps = new DependencyRegistry();
         Features = new FeatureRegistry(Deps.Trace);
@@ -54,7 +56,7 @@ internal sealed class ModInstaller
         if (!r.IsSuccess) ModLog.Warn("ModInstaller: " + r.Reason);
         bool gone = HubTabs.UnregisterModPage();
         if (Current == this) Current = null;
-        return r.IsSuccess && gone;
+        { var returnedAt59 = r.IsSuccess && gone; if (RuleLog.IsOn()) ModLog.Verbose($"ModInstaller.Uninstall: returns {returnedAt59} (line 59)"); return returnedAt59; }
     }
 
     void Add(IFeature feature)

@@ -1,4 +1,5 @@
 using KydlCore.Core;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Features.Sound.Domain;
 
@@ -15,8 +16,9 @@ internal static class LoudnessRules
     /// <summary>Expected outcome: Success with the RMS (0..1+) of the first `count` samples; Rejected for no samples or a null array.</summary>
     internal static OperationResponse<float> Rms(float[] samples, int count)
     {
+        if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Rms", 2d, $"LoudnessRules.Rms(samples={samples}, count={count})");
         // Stryker disable once Equality : equivalent - count 0 gives 0 / 0 = NaN, which is rejected with the same reason a few lines below
-        if (samples == null || count <= 0 || count > samples.Length) return OperationResponse<float>.Rejected(NotMeasurable);
+        if (samples == null || count <= 0 || count > samples.Length) { var returnedAt21 = OperationResponse<float>.Rejected(NotMeasurable); if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Rms:21", 2d, $"LoudnessRules.Rms: returns {returnedAt21} (line 21)"); return returnedAt21; }
         double sum = 0;
         for (int i = 0; i < count; i++)
         {
@@ -24,8 +26,8 @@ internal static class LoudnessRules
             sum += s * s;
         }
         double rms = System.Math.Sqrt(sum / count);
-        if (double.IsNaN(rms) || double.IsInfinity(rms)) return OperationResponse<float>.Rejected(NotMeasurable);
-        return OperationResponse<float>.Success((float)rms, Exact);
+        if (double.IsNaN(rms) || double.IsInfinity(rms)) { var returnedAt29 = OperationResponse<float>.Rejected(NotMeasurable); if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Rms:29", 2d, $"LoudnessRules.Rms: returns {returnedAt29} (line 29)"); return returnedAt29; }
+        { var returnedAt30 = OperationResponse<float>.Success((float)rms, Exact); if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Rms:30", 2d, $"LoudnessRules.Rms: returns {returnedAt30} (line 30)"); return returnedAt30; }
     }
 
     /// <summary>
@@ -34,13 +36,14 @@ internal static class LoudnessRules
     /// </summary>
     internal static OperationResponse<float> Gain(float measuredRms, float targetRms, float minGain, float maxGain)
     {
+        if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Gain", 2d, $"LoudnessRules.Gain(measuredRms={measuredRms}, targetRms={targetRms}, minGain={minGain}, maxGain={maxGain})");
         if (!IsNumber(targetRms) || targetRms <= 0f || !IsNumber(minGain) || !IsNumber(maxGain) || minGain <= 0f || minGain > maxGain)
-            return OperationResponse<float>.Rejected(BadLimits);
-        if (!IsNumber(measuredRms) || measuredRms < SilenceBelow) return OperationResponse<float>.Success(1f, NotMeasurable);
+            { var returnedAt41 = OperationResponse<float>.Rejected(BadLimits); if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Gain:41", 2d, $"LoudnessRules.Gain: returns {returnedAt41} (line 41)"); return returnedAt41; }
+        if (!IsNumber(measuredRms) || measuredRms < SilenceBelow) { var returnedAt42 = OperationResponse<float>.Success(1f, NotMeasurable); if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Gain:42", 2d, $"LoudnessRules.Gain: returns {returnedAt42} (line 42)"); return returnedAt42; }
         float gain = targetRms / measuredRms;
         // Stryker disable once Equality : equivalent - at the limit itself both comparisons give the same value
         float limited = gain < minGain ? minGain : gain > maxGain ? maxGain : gain;
-        return OperationResponse<float>.Success(limited, FloatCompare.Same(limited, gain) ? Exact : Limited);
+        { var returnedAt46 = OperationResponse<float>.Success(limited, FloatCompare.Same(limited, gain) ? Exact : Limited); if (RuleLog.IsOn()) RuleLog.Every("LoudnessRules.Gain:46", 2d, $"LoudnessRules.Gain: returns {returnedAt46} (line 46)"); return returnedAt46; }
     }
 
     private static bool IsNumber(float value) => !float.IsNaN(value) && !float.IsInfinity(value);

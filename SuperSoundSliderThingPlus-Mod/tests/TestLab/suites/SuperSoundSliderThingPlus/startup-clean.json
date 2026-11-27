@@ -19,6 +19,10 @@
       "contains": "PASS",
       "notContains": "FAIL",
       "label": "InGameTests"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

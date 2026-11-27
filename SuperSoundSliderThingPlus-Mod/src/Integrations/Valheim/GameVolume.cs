@@ -1,5 +1,6 @@
 using KydlCore.Common;
 using UnityEngine;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Integrations.Valheim;
 
@@ -35,6 +36,7 @@ internal static class GameVolume
     /// </summary>
     internal static void Apply(bool modOwnsSfx)
     {
+        if (RuleLog.IsOn()) ModLog.Every("GameVolume.Apply", 2d, $"GameVolume.Apply(modOwnsSfx={modOwnsSfx})");
         float master = Master();
         AudioMan.SetSFXVolume(modOwnsSfx ? master : master * Get(SfxKey));
         MusicMan.m_masterMusicVolume = master * Get(MusicKey);
@@ -43,16 +45,18 @@ internal static class GameVolume
     /// <summary>Applies only when the mixer drifted away (the game re-applies its own sfx volume when its slider moves). Expected outcome: true when it had to be set again.</summary>
     internal static bool Reassert()
     {
-        if (Mathf.Abs(AudioMan.GetSFXVolume() - Master()) < 0.001f) return false;
+        if (RuleLog.IsOn()) ModLog.Every("GameVolume.Reassert", 2d, $"GameVolume.Reassert: game sfx volume={AudioMan.GetSFXVolume():0.###}, master={Master():0.###}");
+        if (Mathf.Abs(AudioMan.GetSFXVolume() - Master()) < 0.001f) { if (RuleLog.IsOn()) ModLog.Every("GameVolume.Reassert:49", 2d, $"GameVolume.Reassert: returns false (line 49) - sfx volume {AudioMan.GetSFXVolume():0.###} already equals master {Master():0.###}"); return false; }
         Apply(true);
-        return true;
+        { if (RuleLog.IsOn()) ModLog.Every("GameVolume.Reassert:51", 2d, $"GameVolume.Reassert: returns true (line 51) - set again to master {Master():0.###}"); return true; }
     }
 
     /// <summary>Writes the preferences to disk.</summary>
     internal static bool Save()
     {
+        if (RuleLog.IsOn()) ModLog.Every("GameVolume.Save", 2d, $"GameVolume.Save: writing the preferences, sfx volume={AudioMan.GetSFXVolume():0.###}");
         PlatformPrefs.Save();
-        return true;
+        { if (RuleLog.IsOn()) ModLog.Every("GameVolume.Save:59", 2d, $"GameVolume.Save: returns true (line 59) - preferences written, sfx volume {AudioMan.GetSFXVolume():0.###}"); return true; }
     }
 
     /// <summary>The volume the mixer plays SFX at right now (tests).</summary>

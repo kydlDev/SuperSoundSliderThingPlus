@@ -4,6 +4,7 @@ using KydlCore.Common;
 using SuperSoundSliderThingPlus.Features.Sound.Domain;
 using SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 using UnityEngine;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Integrations.Harmony;
 
@@ -26,8 +27,9 @@ internal static class EffectFadePatch
     [HarmonyPostfix]
     private static void Postfix(EffectFade __instance, AudioSource ___m_audioSource)
     {
-        if (___m_audioSource == null) return;
-        if (!Owners.GetValue(__instance, Find).IsPortal) return;
+        if (RuleLog.IsOn()) ModLog.Every("Owner.Postfix", 2d, $"Owner.Postfix(__instance={__instance}, ___m_audioSource={___m_audioSource})");
+        if (___m_audioSource == null) { if (RuleLog.IsOn()) ModLog.Every("Owner.Postfix:31", 2d, $"Owner.Postfix: returns (line 31) - inputs (__instance={__instance}, ___m_audioSource={___m_audioSource})"); return; }
+        if (!Owners.GetValue(__instance, Find).IsPortal) { if (RuleLog.IsOn()) ModLog.Every("Owner.Postfix:32", 2d, $"Owner.Postfix: returns (line 32) - inputs (__instance={__instance}, ___m_audioSource={___m_audioSource})"); return; }
         float factor = SoundLevels.Factor(SoundCategory.Portal);
         if (factor < 1f) ___m_audioSource.volume *= factor;
     }

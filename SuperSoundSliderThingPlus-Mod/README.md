@@ -12,7 +12,7 @@ Client-side audio control for Valheim: a master volume, the music, and a mute sl
 
 ## How to use
 - Requires **KydlCore** (installed automatically by the mod manager).
-- Press **F6**, open the **Sound** tab and drag the sliders. Changes apply at once and are saved.
+- Press **F6**, open the **Game menu sounds** or **Special adjustments** tab and drag the sliders. Changes apply at once and are saved.
 
 ## Configuration
 `BepInEx/config/com.kydldev.SuperSoundSliderThingPlus.cfg` (or the in-game config manager):

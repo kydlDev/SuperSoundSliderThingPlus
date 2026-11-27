@@ -7,6 +7,7 @@ using SuperSoundSliderThingPlus.Features.Example.Domain;
 using SuperSoundSliderThingPlus.Features.Example.Execution;
 using SuperSoundSliderThingPlus.Presentation.Hub.Registration;
 using SuperSoundSliderThingPlus.Presentation.Hub.ViewModels;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Features.Example.Infrastructure;
 
@@ -26,6 +27,7 @@ internal sealed class ExampleFeature : IFeature
 
     internal ExampleFeature(DependencyRegistry deps)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"ExampleFeature.ExampleFeature(deps={deps})");
         _deps = deps;
         var executor = new ExampleValueExecutor(new LocalOwnership(), SetValue);   // method group bound once
         deps.Commands.Register(new SetExampleValueHandler(executor, deps.Trace));

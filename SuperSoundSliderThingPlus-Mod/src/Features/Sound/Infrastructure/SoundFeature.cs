@@ -1,4 +1,4 @@
-﻿using KydlCore.Common;
+using KydlCore.Common;
 using KydlCore.Core;
 using SuperSoundSliderThingPlus.Bootstrap;
 using SuperSoundSliderThingPlus.Configuration;
@@ -8,6 +8,7 @@ using SuperSoundSliderThingPlus.Features.Sound.Execution;
 using SuperSoundSliderThingPlus.Integrations.Valheim;
 using SuperSoundSliderThingPlus.Presentation.Hub.Commands;
 using UnityEngine;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 
@@ -39,6 +40,7 @@ internal sealed class SoundFeature : IFeature
 
     internal SoundFeature(DependencyRegistry deps)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"SoundFeature.SoundFeature(deps={deps})");
         _deps = deps;
         var executor = new MuteExecutor(new LocalSoundOwnership(), SetMute);   // method group bound once
         deps.Commands.Register(new SetMuteHandler(executor, deps.Trace));
@@ -76,17 +78,18 @@ internal sealed class SoundFeature : IFeature
     /// <summary>Game -> slider: the master, music and sound effects sliders take the game's volumes. Expected outcome: true when every slider matches or was set.</summary>
     internal bool Pull()
     {
-        if (!_running || !ModSettings.MenuSoundsOn) return false;      // [Game menu sounds] switched off: the game's volumes stay the game's
+        if (RuleLog.IsOn()) ModLog.Every("SoundFeature.Pull", 2d, $"SoundFeature.Pull: running={_running}, game sfx volume={GameVolume.Sfx():0.###}");
+        if (!_running || !ModSettings.MenuSoundsOn) { if (RuleLog.IsOn()) ModLog.Every("SoundFeature.Pull:82", 2d, $"SoundFeature.Pull: returns false (line 82) - when !_running || !ModSettings.MenuSoundsOn: _running={(_running)}, ModSettings.MenuSoundsOn={(ModSettings.MenuSoundsOn)}"); return false; }      // [Game menu sounds] switched off: the game's volumes stay the game's
         bool ok = true;
         foreach (SoundSlider slider in Synced) ok &= PullOne(slider);
-        return ok;
+        { var returnedAt85 = ok; if (RuleLog.IsOn()) ModLog.Every("SoundFeature.Pull:85", 2d, $"SoundFeature.Pull: returns {returnedAt85} (line 85)"); return returnedAt85; }
     }
 
     private bool PullOne(SoundSlider slider)
     {
         var mute = MasterVolumeRules.MuteFromVolume(GameVolume.Get(KeyOf(slider)));
-        if (!mute.IsSuccess) return false;
-        if (MasterVolumeRules.SameMute(SoundLevels.MuteOf(slider), mute.Value)) return true;
+        if (!mute.IsSuccess) { if (RuleLog.IsOn()) ModLog.Every("SoundFeature.PullOne:91", 2d, $"SoundFeature.PullOne: returns false (line 91) - inputs (slider={slider})"); return false; }
+        if (MasterVolumeRules.SameMute(SoundLevels.MuteOf(slider), mute.Value)) { if (RuleLog.IsOn()) ModLog.Every("SoundFeature.PullOne:92", 2d, $"SoundFeature.PullOne: returns true (line 92) - inputs (slider={slider})"); return true; }
         _pulling = true;   // the change event must not echo the value back into the game
         try
         {
@@ -100,10 +103,10 @@ internal sealed class SoundFeature : IFeature
     /// <summary>A few times a second: follows the game's master volume, applies the first-run defaults, saves a pushed volume. Cheap and throttled.</summary>
     internal void Tick()
     {
-        if (!_running || Time.unscaledTime < _nextTick) return;
+        if (!_running || Time.unscaledTime < _nextTick) { if (RuleLog.IsOn()) ModLog.Every("SoundFeature.Tick:106", 2d, $"SoundFeature.Tick: returns (line 106) - when !_running || Time.unscaledTime < _nextTick: _running={(_running)}, Time.unscaledTime={(Time.unscaledTime)}, _nextTick={(_nextTick)}"); return; }
         _nextTick = Time.unscaledTime + TickSeconds;
         Pull();
-        if (GameVolume.Reassert()) ModLog.Verbose("SoundFeature: the game re-applied its sound effects volume, set back to master only (the slider does that per sound)");
+        if (GameVolume.Reassert()) ModLog.Verbose($"SoundFeature: the game re-applied its sound effects volume, set back to master only (the slider does that per sound) - master mute {ModSettings.MasterMute.Value}");
         ApplyFirstRunDefaults();
         if (_saveAt >= 0f && Time.unscaledTime >= _saveAt)
         {
@@ -121,11 +124,11 @@ internal sealed class SoundFeature : IFeature
 
     private void Push(SoundSlider slider)
     {
-        if (!_running || _pulling || !ModSettings.MenuSoundsOn) return;
+        if (!_running || _pulling || !ModSettings.MenuSoundsOn) { if (RuleLog.IsOn()) ModLog.Verbose($"SoundFeature.Push: returns (line 127) - inputs (slider={slider})"); return; }
         var volume = MasterVolumeRules.VolumeFromMute(SoundLevels.MuteOf(slider));
-        if (!volume.IsSuccess) return;
+        if (!volume.IsSuccess) { if (RuleLog.IsOn()) ModLog.Verbose($"SoundFeature.Push: returns (line 129) - inputs (slider={slider})"); return; }
         string key = KeyOf(slider);
-        if (MasterVolumeRules.SameMute(MasterVolumeRules.MuteFromVolume(GameVolume.Get(key)).Value, SoundLevels.MuteOf(slider))) return;
+        if (MasterVolumeRules.SameMute(MasterVolumeRules.MuteFromVolume(GameVolume.Get(key)).Value, SoundLevels.MuteOf(slider))) { if (RuleLog.IsOn()) ModLog.Verbose($"SoundFeature.Push: returns (line 131) - inputs (slider={slider})"); return; }
         GameVolume.Write(key, volume.Value);
         _saveAt = Time.unscaledTime + SaveDelaySeconds;
         ModLog.State("game " + key, "game", "slider", "pushed " + volume.Value.ToString("F2") + " into the game's " + key);
@@ -133,18 +136,19 @@ internal sealed class SoundFeature : IFeature
 
     private static string KeyOf(SoundSlider slider)
     {
+        if (RuleLog.IsOn()) ModLog.Every("SoundFeature.KeyOf", 2d, $"SoundFeature.KeyOf(slider={slider})");
         switch (slider)
         {
-            case SoundSlider.Music: return GameVolume.MusicKey;
-            case SoundSlider.Effects: return GameVolume.SfxKey;
-            default: return GameVolume.MasterKey;
+            case SoundSlider.Music: { var returnedAt142 = GameVolume.MusicKey; if (RuleLog.IsOn()) ModLog.Every("SoundFeature.KeyOf:142", 2d, $"SoundFeature.KeyOf: returns {returnedAt142} (line 142)"); return returnedAt142; }
+            case SoundSlider.Effects: { var returnedAt143 = GameVolume.SfxKey; if (RuleLog.IsOn()) ModLog.Every("SoundFeature.KeyOf:143", 2d, $"SoundFeature.KeyOf: returns {returnedAt143} (line 143)"); return returnedAt143; }
+            default: { var returnedAt144 = GameVolume.MasterKey; if (RuleLog.IsOn()) ModLog.Every("SoundFeature.KeyOf:144", 2d, $"SoundFeature.KeyOf: returns {returnedAt144} (line 144)"); return returnedAt144; }
         }
     }
 
     // D-018: the first time the mod runs after install (no DefaultsApplied yet) the category sliders start at 50; after that the player's values stand.
     private void ApplyFirstRunDefaults()
     {
-        if (ModSettings.DefaultsApplied.Value) return;
+        if (ModSettings.DefaultsApplied.Value) { if (RuleLog.IsOn()) ModLog.Every("SoundFeature.ApplyFirstRunDefaults:151", 2d, $"SoundFeature.ApplyFirstRunDefaults: returns (line 151) - when ModSettings.DefaultsApplied.Value: ModSettings.DefaultsApplied.Value={(ModSettings.DefaultsApplied.Value)}"); return; }
         foreach (SoundSlider slider in Categories) SoundCommands.SetMute(_deps.Commands, slider, FirstRunMute);
         ModSettings.DefaultsApplied.Value = true;
         ModLog.State("first-run defaults", "pending", "applied", "category sliders set to " + FirstRunMute.ToString("0") + "%");

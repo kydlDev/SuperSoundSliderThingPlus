@@ -3,10 +3,10 @@ using System.Reflection;
 using BepInEx;
 using BepInEx.Configuration;
 using HarmonyLib;
-using Jotunn.Utils;
 using KydlCore.Common;
 using UnityEngine;
 using SuperSoundSliderThingPlus.Configuration;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Bootstrap;
 
@@ -15,19 +15,16 @@ namespace SuperSoundSliderThingPlus.Bootstrap;
 /// Entry point. Order in Awake matters: log first, then the config (player settings), then text, then everything that uses them.
 /// </summary>
 [BepInPlugin(ModGuid, ModName, ModVersion)]
-[BepInDependency(Jotunn.Main.ModGuid)]
 // HARD dependency on KydlCore (T-070): BepInEx loads KydlCore first and refuses to load this mod without it (or with an older one).
 // The version here = the KydlCore version in manifest.json (a test checks it). Raise both together when the mod needs a newer KydlCore.
-[BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid, "1.1.1")]
-// MIGRATION_DECISIONS "Network compatibility": exact versions (Patch). A mod that changes shared world state = EveryoneMustHaveMod;
-// a client-only mod (camera / view) = VersionCheckOnly (joins servers without it; same version when the server has it). Reason in docs\Dependencies.md.
-[NetworkCompatibility(CompatibilityLevel.VersionCheckOnly, VersionStrictness.Patch)]
+[BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid, "1.2.0")]
+// Network check: ModSync.cs (KydlCore 1.2.0 KyNetwork, ClientOnly; no Jotunn - MIGRATION_PLAN part 0).
 public class Plugin : BaseUnityPlugin
 {
     // ModGuid never changes after the first release. ModVersion = manifest.json version_number = newest CHANGELOG heading (tests check it).
     public const string ModGuid = "com.kydldev.SuperSoundSliderThingPlus";
     public const string ModName = "SuperSoundSliderThingPlus";
-    public const string ModVersion = "1.0.1";
+    public const string ModVersion = "1.0.2";
     public const string BundleName = "supersoundsliderthingplus";
 
     internal static Plugin Instance;
@@ -41,9 +38,12 @@ public class Plugin : BaseUnityPlugin
         Instance = this;
         ModLog.Init(Logger, ModName, () => ModSettings.DebugLog != null && ModSettings.DebugLog.Value);
         ModLog.Info(ModName + " " + ModVersion + " loaded (dll built " + File.GetLastWriteTime(Assembly.GetExecutingAssembly().Location).ToString("yyyy-MM-dd HH:mm:ss") + ")");
+        SuperSoundSliderThingPlus.Core.RuleLog.Sink = ModLog.Verbose;   // the pure code logs through ModLog (PROJECT_RULES 8, KydlCore D-103)
+        SuperSoundSliderThingPlus.Core.RuleLog.DebugOn = () => ModSettings.DebugLog != null && ModSettings.DebugLog.Value;
 
         // the UI kit, its log, the input lock and the F6 hub belong to KydlCore: this mod sets no log sink / owner / lock and has no menu key
         ModSettings.Bind(Config);
+        int adminShared = ModSync.ShareAdminOnly(Config);     // network check + server-decided settings (KydlCore KyNetwork)
         _cfgWatcher = new ConfigReloader(Config);
         Loc.Register(Ui.UiText.En);       // Ui. = SuperSoundSliderThingPlus.Ui (the Unity project's views and texts, linked into the mod)
 
@@ -89,6 +89,7 @@ public class Plugin : BaseUnityPlugin
 
     void Update()
     {
+        if (RuleLog.IsOn()) ModLog.Every("Plugin.Update", 2d, $"Plugin.Update: tick - cfgWatcher={(_cfgWatcher != null)}, installer={(_installer != null)}");
         if (_cfgWatcher != null) _cfgWatcher.Tick();
     }
 
@@ -97,6 +98,6 @@ public class Plugin : BaseUnityPlugin
         Config.SettingChanged -= OnSettingChanged;
         if (_installer != null) { _installer.Uninstall(); _installer = null; }
         if (_cfgWatcher != null) { _cfgWatcher.Dispose(); _cfgWatcher = null; }
-        ModLog.Verbose("Plugin: destroyed");
+        ModLog.Verbose($"Plugin: destroyed - installer={(_installer != null)}, cfgWatcher={(_cfgWatcher != null)}");
     }
 }

@@ -75,8 +75,12 @@ public class ArchitectureRulesTests
         string proj = File.ReadAllText(Directory.GetFiles(TestPaths.ModDir, "*.csproj").Single());
         Assert.That(proj, Does.Not.Contain("KydlUseCore"), "the shared code lives in KydlCore.dll; the old build switch is gone");
         Assert.That(plugin, Does.Contain("[BepInDependency(KydlCore.Bootstrap.Plugin.ModGuid"));
-        Assert.That(Regex.IsMatch(plugin, @"\[NetworkCompatibility\(CompatibilityLevel\.(EveryoneMustHaveMod|VersionCheckOnly), VersionStrictness\.Patch\)\]"), Is.True,
-            "MIGRATION_DECISIONS: exact versions (Patch); EveryoneMustHaveMod for shared-world mods, VersionCheckOnly for client-only mods");
+        // KydlCore 1.2.0 (MIGRATION_PLAN part 0): network check through KyNetwork (ServerSync in KydlCore), exact versions, no Jotunn anywhere
+        string sync = File.ReadAllText(Path.Combine(Src, "Configuration", "ModSync.cs"));
+        Assert.That(plugin, Does.Not.Contain("NetworkCompatibility"), "the mod does not use Jotunn's network check; ModSync.cs (KyNetwork) does");
+        Assert.That(plugin, Does.Not.Contain("Jotunn.Main.ModGuid"), "no Jotunn dependency (KydlCore 1.2.0)");
+        Assert.That(sync, Does.Match(@"KyNetwork\.Register\(\w*Plugin\.ModGuid, \w*Plugin\.ModName, \w*Plugin\.ModVersion, KyNetworkLevel\.(EveryoneMustHave|ClientOnly)\)"), "exact versions; EveryoneMustHave for a shared-world mod, ClientOnly for a client-only mod");
+        Assert.That(proj, Does.Contain("<KydlNoJotunn>true</KydlNoJotunn>"), "built without Jotunn.dll (KydlCore 1.2.0)");
     }
 
     [Test] public void EveryFeature_HasAnAdapterImplementingIFeature()

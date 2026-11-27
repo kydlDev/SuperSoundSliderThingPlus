@@ -1,4 +1,4 @@
-﻿{
+{
   "name": "hub-shot",
   "description": "Opens the mod's hub page (the General tab first; the eight sliders are in the Game menu sounds and Special adjustments tabs, no own Sound tab since 2026-11-17) and takes a picture through GameProbe; a person looks at it",
   "timeout": 90,
@@ -9,7 +9,11 @@
     { "do": "wait", "seconds": 2 },
     { "do": "invoke", "method": "Kydl.GameProbe.ProbeApi.Screenshot" },
     { "do": "wait", "seconds": 2 },
-    { "do": "hook", "name": "kc.hubClose" }
+    { "do": "hook", "name": "kc.hubClose" },
+    {
+      "do": "console",
+      "command": "killall"
+    }
   ],
   "asserts": [ { "check": "noErrors", "source": "SuperSoundSliderThingPlus" } ]
 }

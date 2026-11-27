@@ -68,6 +68,10 @@
     {
       "do": "hook",
       "name": "SuperSoundSliderThingPlus.mob.clear"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

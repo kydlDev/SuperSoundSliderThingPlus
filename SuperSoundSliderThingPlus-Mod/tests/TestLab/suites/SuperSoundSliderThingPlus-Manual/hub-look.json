@@ -17,6 +17,10 @@
     {
       "do": "checkpoint",
       "message": "Press Esc. Is the hub closed and can you move / look around again (input released)?"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

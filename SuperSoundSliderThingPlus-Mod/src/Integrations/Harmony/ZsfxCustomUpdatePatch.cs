@@ -5,6 +5,7 @@ using SuperSoundSliderThingPlus.Features.Sound.Domain;
 using SuperSoundSliderThingPlus.Features.Sound.Infrastructure;
 using SuperSoundSliderThingPlus.Integrations.Valheim;
 using UnityEngine;
+using SuperSoundSliderThingPlus.Core;
 
 namespace SuperSoundSliderThingPlus.Integrations.Harmony;
 
@@ -29,7 +30,8 @@ internal static class ZsfxCustomUpdatePatch
     [HarmonyPostfix]
     private static void Postfix(ZSFX __instance, AudioSource ___m_audioSource)
     {
-        if (___m_audioSource == null) return;
+        if (RuleLog.IsOn()) ModLog.Every("SoundEntry.Postfix", 2d, $"SoundEntry.Postfix(__instance={__instance}, ___m_audioSource={___m_audioSource})");
+        if (___m_audioSource == null) { if (RuleLog.IsOn()) ModLog.Every("SoundEntry.Postfix:34", 2d, $"SoundEntry.Postfix: returns (line 34) - inputs (__instance={__instance}, ___m_audioSource={___m_audioSource})"); return; }
         SoundEntry entry = Entries.GetValue(__instance, Classify);
         entry.Raw = ___m_audioSource.volume;
         // the game has just set the volume (unscaled); the audio heard right now was made with the previous scale applied
@@ -45,14 +47,15 @@ internal static class ZsfxCustomUpdatePatch
     /// <summary>Tests: what the patch last saw and did for one sound. Expected outcome: true when the patch has handled the sound at least once.</summary>
     internal static bool TryGetLast(ZSFX sfx, out SoundCategory category, out float raw, out float scaled)
     {
+        if (RuleLog.IsOn()) ModLog.Verbose($"SoundEntry.TryGetLast(sfx={sfx})");
         SoundEntry entry;
         category = SoundCategory.Effects;
         raw = scaled = 0f;
-        if (sfx == null || !Entries.TryGetValue(sfx, out entry)) return false;
+        if (sfx == null || !Entries.TryGetValue(sfx, out entry)) { if (RuleLog.IsOn()) ModLog.Verbose($"SoundEntry.TryGetLast: returns false (line 54) - inputs (sfx={sfx})"); return false; }
         category = entry.Category;
         raw = entry.Raw;
         scaled = entry.Scaled;
-        return true;
+        { if (RuleLog.IsOn()) ModLog.Verbose($"SoundEntry.TryGetLast: returns true (line 58) - inputs (sfx={sfx})"); return true; }
     }
 
     private static SoundEntry ClassifyNew(ZSFX sfx)

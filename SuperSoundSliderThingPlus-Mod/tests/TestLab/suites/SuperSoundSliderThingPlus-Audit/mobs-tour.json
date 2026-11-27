@@ -64,6 +64,10 @@
       "name": "SuperSoundSliderThingPlus.mob.tourSummary",
       "contains": "tour of",
       "label": "summary"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

@@ -175,6 +175,10 @@
       "do": "hook",
       "name": "SuperSoundSliderThingPlus.volume.restore",
       "contains": "restored"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

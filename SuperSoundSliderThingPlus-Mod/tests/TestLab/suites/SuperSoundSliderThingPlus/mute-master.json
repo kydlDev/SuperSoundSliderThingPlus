@@ -99,6 +99,10 @@
     {
       "do": "wait",
       "seconds": 1
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

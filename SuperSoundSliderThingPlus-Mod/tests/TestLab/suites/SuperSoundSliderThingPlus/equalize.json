@@ -62,6 +62,10 @@
     {
       "do": "hook",
       "name": "SuperSoundSliderThingPlus.sound.clear"
+    },
+    {
+      "do": "console",
+      "command": "killall"
     }
   ],
   "asserts": [

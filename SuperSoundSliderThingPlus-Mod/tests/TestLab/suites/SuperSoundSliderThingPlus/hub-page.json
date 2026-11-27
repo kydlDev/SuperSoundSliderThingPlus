@@ -1,4 +1,4 @@
-﻿{
+{
     "name":  "hub-page",
     "description":  "KydlCore acceptance (spec 4): the mod is in the F6 hub with its config tabs only (user, 2026-11-17: no own Sound tab, the sliders are in Game menu sounds and Special adjustments), the page renders through the shared UI, the hub opens and closes cleanly",
     "timeout":  60,
@@ -77,8 +77,12 @@
                                     "expect":  false
                                 },
                       "timeout":  5
-                  }
-              ],
+                  },
+    {
+      "do": "console",
+      "command": "killall"
+    }
+  ],
     "asserts":  [
                     {
                         "check":  "noErrors",
